@@ -21,6 +21,7 @@ import services.ClientInfo;
  * The Class Server.
  * 
  * @author vivoyer
+ *         chneau
  */
 public class Server implements Runnable
 {
@@ -42,7 +43,7 @@ public class Server implements Runnable
 	{
 		super();
 		start = new GregorianCalendar();
-		clients = new ArrayList<ClientInfo>();
+		clients = new ArrayList<>();
 		thread = new Thread(this);
 		clients = new Vector<>();
 		serverSocket = null;

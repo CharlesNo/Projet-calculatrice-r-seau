@@ -13,21 +13,25 @@ import java.net.Socket;
 
 /*---------------------------------------------------------------*/
 /**
- * @author vivoyer
+ * The Class ClientInfo.
  * 
+ * @author vivoyer
+ *         chneau
  */
 public class ClientInfo
 {
+	/** The m client listener. */
+	private ClientReceiver	clientReceiver	= null;
+	/** The m client sender. */
+	private ClientSender	clientSender	= null;
+	/** The socket. */
 	private final Socket	socket;
 
-	public ClientInfo(final Socket socket) throws IOException
-	{
-		this.socket = socket;
-	}
-
-	/*---------------------------------------------------------------*/
+	/* _________________________________________________________ */
 	/**
-	 * @return
+	 * Hash code.
+	 * 
+	 * @return the int
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -39,10 +43,13 @@ public class ClientInfo
 		return result;
 	}
 
-	/*---------------------------------------------------------------*/
+	/* _________________________________________________________ */
 	/**
+	 * Equals.
+	 * 
 	 * @param obj
-	 * @return
+	 *            the obj
+	 * @return true, if successful
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -77,14 +84,65 @@ public class ClientInfo
 
 	/* _________________________________________________________ */
 	/**
+	 * Instantiates a new client info.
+	 * 
+	 * @param socket
+	 *            the accept
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public ClientInfo(final Socket socket) throws IOException
+	{
+		this.socket = socket;
+		clientReceiver = new ClientReceiver(this);
+		clientSender = new ClientSender(this);
+		clientReceiver.start();
+		clientSender.start();
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ clientReceiver.
+	 * 
+	 * @return la valeur du champ clientReceiver.
+	 */
+	public final ClientReceiver getClientReciever()
+	{
+		return clientReceiver;
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ clientSender.
+	 * 
+	 * @return la valeur du champ clientSender.
+	 */
+	public final ClientSender getClientSender()
+	{
+		return clientSender;
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ socket.
+	 * 
+	 * @return la valeur du champ socket.
+	 */
+	public final Socket getSocket()
+	{
+		return socket;
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Interrupt.
+	 * 
+	 * @see ClientSender#interrupt()
+	 * @see ClientReceiver#interrupt()
 	 */
 	public void interrupt()
 	{
-		// TODO Auto-generated method stub
+		clientSender.interrupt();
+		clientReceiver.interrupt();
 	}
 }
-/*---------------------------------------------------------------*/
-/*
- * Fin du fichier ClientInfo.java
- * /*---------------------------------------------------------------
- */
