@@ -21,7 +21,9 @@ public enum ProtocolCommandes
 	OP1("OP1"),
 	OP2("OP2"),
 	RES("RES"),
-	KIT("KIT");
+	KIT("KIT"),
+	TIM("TIM"),
+	REQ("REQ");
 	
 	private final String value;
 	

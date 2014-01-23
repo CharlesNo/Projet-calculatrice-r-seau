@@ -8,6 +8,7 @@
 package application;
 
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -27,6 +28,13 @@ public class Server implements Runnable
 	private List<ClientInfo> clients;
 	
 	private ServerSocket serverSocket;
+	
+	public Server()
+	{
+		start = new GregorianCalendar();
+		clients = new ArrayList<ClientInfo>();
+		
+	}
 	
 	/*---------------------------------------------------------------*/
 	/**
