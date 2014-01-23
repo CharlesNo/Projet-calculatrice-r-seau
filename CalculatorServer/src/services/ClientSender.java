@@ -109,9 +109,8 @@ public class ClientSender implements Runnable
 		}
 		catch (final Exception e)
 		{
-			// Commuication problem
+			e.printStackTrace();
 		}
-		// Communication is broken. Interrupt both listener and sender threads
 		clientInfo.getClientReciever().interrupt();
 	}
 

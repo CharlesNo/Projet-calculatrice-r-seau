@@ -10,6 +10,8 @@ package services;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observable;
+import java.util.Observer;
 
 /*---------------------------------------------------------------*/
 /**
@@ -18,7 +20,7 @@ import java.net.Socket;
  * @author vivoyer
  *         chneau
  */
-public class ClientInfo
+public class ClientInfo extends Observable implements Observer
 {
 	/** The m client listener. */
 	private ClientReceiver	clientReceiver	= null;
@@ -29,18 +31,20 @@ public class ClientInfo
 
 	/* _________________________________________________________ */
 	/**
-	 * Hash code.
+	 * Instantiates a new client info.
 	 * 
-	 * @return the int
-	 * @see java.lang.Object#hashCode()
+	 * @param socket
+	 *            the accept
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	@Override
-	public int hashCode()
+	public ClientInfo(final Socket socket) throws IOException
 	{
-		final int prime = 31;
-		int result = 1;
-		result = (prime * result) + ((socket == null) ? 0 : socket.hashCode());
-		return result;
+		this.socket = socket;
+		clientReceiver = new ClientReceiver(this);
+		clientSender = new ClientSender(this);
+		clientReceiver.start();
+		clientSender.start();
 	}
 
 	/* _________________________________________________________ */
@@ -84,24 +88,6 @@ public class ClientInfo
 
 	/* _________________________________________________________ */
 	/**
-	 * Instantiates a new client info.
-	 * 
-	 * @param socket
-	 *            the accept
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public ClientInfo(final Socket socket) throws IOException
-	{
-		this.socket = socket;
-		clientReceiver = new ClientReceiver(this);
-		clientSender = new ClientSender(this);
-		clientReceiver.start();
-		clientSender.start();
-	}
-
-	/* _________________________________________________________ */
-	/**
 	 * Retourne la valeur du champ clientReceiver.
 	 * 
 	 * @return la valeur du champ clientReceiver.
@@ -135,6 +121,22 @@ public class ClientInfo
 
 	/* _________________________________________________________ */
 	/**
+	 * Hash code.
+	 * 
+	 * @return the int
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + ((socket == null) ? 0 : socket.hashCode());
+		return result;
+	}
+
+	/* _________________________________________________________ */
+	/**
 	 * Interrupt.
 	 * 
 	 * @see ClientSender#interrupt()
@@ -144,5 +146,22 @@ public class ClientInfo
 	{
 		clientSender.interrupt();
 		clientReceiver.interrupt();
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Update.
+	 * 
+	 * @param observable
+	 *            the observable
+	 * @param object
+	 *            the object
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
+	public void update(@SuppressWarnings("unused") final Observable observable,
+			final Object object)
+	{
+		notifyObservers(object);
 	}
 }

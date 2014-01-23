@@ -26,7 +26,7 @@ public class Launch
 	 */
 	public static void main(final String[] args)
 	{
-		// PENSER à IMPLEMENTER Auto-generated method stub
+		final Server server = new Server();
 	}
 }
 /*---------------------------------------------------------------*/

@@ -31,12 +31,14 @@ public enum ProtocolCommandes
 	OP2("OP2"),
 	/** The res. */
 	RES("RES"),
-	/** The kit. */
-	KIT("KIT"),
+	/** The quit. */
+	QUIT("QUIT"),
 	/** The tim. */
 	TIM("TIM"),
 	/** The req. */
-	REQ("REQ");
+	REQ("REQ"),
+	/** The stat. */
+	STAT("STAT"), ;
 	/** The value. */
 	private final String	value;
 
