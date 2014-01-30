@@ -66,7 +66,8 @@ public class AnalyzerCalcul implements Observer, Analyzer
 		String id = null;
 		if (message != null)
 		{
-			final String[] split = message.split(" ");
+			final String[] split = message.split(ProtocolCommandes.SEP
+					.toString());
 			Operation operation = null;
 			if (split.length >= 6)
 			{
