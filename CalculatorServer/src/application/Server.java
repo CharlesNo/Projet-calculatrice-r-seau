@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Vector;
 import services.AnalyzerCalcul;
 import services.ClientInfo;
+import services.Log;
 
 /*---------------------------------------------------------------*/
 /**
@@ -30,14 +31,14 @@ public class Server implements Runnable
 	private List<ClientInfo>		clients;
 	/** The port. */
 	private final int				port;
+	/** The run. */
+	private boolean					run;
 	/** The server socket. */
 	private ServerSocket			serverSocket;
 	/** The start. */
 	private final GregorianCalendar	start;
 	/** The thread. */
 	private Thread					thread;
-	/** The run. */
-	private boolean					run;
 
 	/**
 	 * Instantiates a new server.
@@ -140,6 +141,7 @@ public class Server implements Runnable
 			{
 				final ClientInfo client = new ClientInfo(serverSocket.accept());
 				client.addObserver(AnalyzerCalcul.getInstance());
+				Log.d("Server", "run()");
 				clients.add(client);
 			}
 			catch (final IOException ioe)

@@ -19,28 +19,28 @@ public enum ProtocolCommandes
 {
 	/** The add. */
 	ADD("ADD"),
-	/** The min. */
-	MIN("MIN"),
 	/** The div. */
 	DIV("DIV"),
+	/** The min. */
+	MIN("MIN"),
 	/** The mul. */
 	MUL("MUL"),
 	/** The O p1. */
 	OP1("OP1"),
 	/** The O p2. */
 	OP2("OP2"),
-	/** The res. */
-	RES("RES"),
 	/** The quit. */
 	QUIT("QUIT"),
-	/** The tim. */
-	TIM("TIM"),
 	/** The req. */
 	REQ("REQ"),
+	/** The res. */
+	RES("RES"),
+	/** The sep. */
+	SEP(" "),
 	/** The stat. */
 	STAT("STAT"),
-	/** The sep. */
-	SEP(" ");
+	/** The tim. */
+	TIM("TIM");
 	/** The value. */
 	private final String	value;
 

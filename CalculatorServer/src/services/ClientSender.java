@@ -28,8 +28,10 @@ public class ClientSender implements Runnable
 	private final Vector<String>	messages	= new Vector<>();
 	/** The m out. */
 	private final PrintWriter		out;
+	/** The run. */
+	private boolean					run;
 	/** The thread. */
-	private final Thread			thread;
+	private Thread					thread;
 
 	/**
 	 * Instantiates a new client sender.
@@ -41,7 +43,7 @@ public class ClientSender implements Runnable
 	 */
 	public ClientSender(final ClientInfo aClientInfo) throws IOException
 	{
-		thread = new Thread(this);
+		run = false;
 		clientInfo = aClientInfo;
 		out = new PrintWriter(new OutputStreamWriter(aClientInfo.getSocket()
 				.getOutputStream()));
@@ -101,10 +103,11 @@ public class ClientSender implements Runnable
 	{
 		try
 		{
-			while (!isInterrupted())
+			while (!isInterrupted() && run)
 			{
 				final String message = getNextMessageFromQueue();
 				sendMessageToClient(message);
+				Log.d("ClientSender", "run()" + message);
 			}
 		}
 		catch (final Exception e)
@@ -148,6 +151,13 @@ public class ClientSender implements Runnable
 	 */
 	public void start()
 	{
-		thread.start();
+		if (thread == null)
+		{
+			run = true;
+			thread = new Thread(this);
+			thread.setDaemon(true);
+			thread.setName("ClientSender");
+			thread.start();
+		}
 	}
 }

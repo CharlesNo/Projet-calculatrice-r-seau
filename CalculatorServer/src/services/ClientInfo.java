@@ -49,6 +49,20 @@ public class ClientInfo extends Observable implements Observer
 
 	/* _________________________________________________________ */
 	/**
+	 * Adds the observer.
+	 * 
+	 * @param observer
+	 *            the observer
+	 * @see java.util.Observable#addObserver(java.util.Observer)
+	 */
+	@Override
+	public synchronized void addObserver(final Observer observer)
+	{
+		super.addObserver(observer);
+	}
+
+	/* _________________________________________________________ */
+	/**
 	 * Equals.
 	 * 
 	 * @param obj
@@ -150,6 +164,21 @@ public class ClientInfo extends Observable implements Observer
 
 	/* _________________________________________________________ */
 	/**
+	 * Notify observers.
+	 * 
+	 * @param object
+	 *            the object
+	 * @see java.util.Observable#notifyObservers(java.lang.Object)
+	 */
+	@Override
+	public void notifyObservers(final Object object)
+	{
+		setChanged();
+		super.notifyObservers(object);
+	}
+
+	/* _________________________________________________________ */
+	/**
 	 * Update.
 	 * 
 	 * @param observable
@@ -159,23 +188,12 @@ public class ClientInfo extends Observable implements Observer
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
-	public void update(@SuppressWarnings("unused") final Observable observable,
-			final Object object)
+	public void update(final Observable observable, final Object object)
 	{
-		notifyObservers(object);
-	}
-
-	/* _________________________________________________________ */
-	/**
-	 * Adds the observer.
-	 * 
-	 * @param observer
-	 *            the observer
-	 * @see java.util.Observable#addObserver(java.util.Observer)
-	 */
-	@Override
-	public synchronized void addObserver(final Observer observer)
-	{
-		super.addObserver(observer);
+		if (observable instanceof ClientReceiver)
+		{
+			Log.d("ClientInfo", "update() " + object);
+			notifyObservers(object);
+		}
 	}
 }

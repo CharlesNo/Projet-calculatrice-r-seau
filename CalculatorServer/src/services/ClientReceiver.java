@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
+import java.util.Observer;
 
 /*---------------------------------------------------------------*/
 /**
@@ -26,8 +27,10 @@ public class ClientReceiver extends Observable implements Runnable
 	private final ClientInfo		clientInfo;
 	/** The m in. */
 	private final BufferedReader	reader;
+	/** The run. */
+	private boolean					run;
 	/** The thread. */
-	private final Thread			thread;
+	private Thread					thread;
 
 	/**
 	 * Instantiates a new client listener.
@@ -39,10 +42,25 @@ public class ClientReceiver extends Observable implements Runnable
 	 */
 	public ClientReceiver(final ClientInfo aClientInfo) throws IOException
 	{
-		thread = new Thread(this);
+		run = false;
 		clientInfo = aClientInfo;
+		addObserver(clientInfo);
 		reader = new BufferedReader(new InputStreamReader(aClientInfo
 				.getSocket().getInputStream()));
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Adds the observer.
+	 * 
+	 * @param observer
+	 *            the observer
+	 * @see java.util.Observable#addObserver(java.util.Observer)
+	 */
+	@Override
+	public synchronized void addObserver(final Observer observer)
+	{
+		super.addObserver(observer);
 	}
 
 	/* _________________________________________________________ */
@@ -92,9 +110,11 @@ public class ClientReceiver extends Observable implements Runnable
 	{
 		try
 		{
-			while (!isInterrupted())
+			while (!isInterrupted() && run)
 			{
+				Log.d("ClientReceiver", "run()");
 				final String message = reader.readLine();
+				Log.d("ClientReceiver", "run() + message = " + message);
 				if (message == null)
 				{
 					break;
@@ -117,6 +137,14 @@ public class ClientReceiver extends Observable implements Runnable
 	 */
 	public void start()
 	{
-		thread.start();
+		if (thread == null)
+		{
+			run = true;
+			thread = new Thread(this);
+			thread.setDaemon(true);
+			thread.setName("ClientReceiver");
+			thread.start();
+			Log.d("ClientReceiver", "start()");
+		}
 	}
 }

@@ -52,42 +52,15 @@ public class AnalyzerCalcul implements Observer, Analyzer
 
 	/* _________________________________________________________ */
 	/**
-	 * Update.
-	 * 
-	 * @param observable
-	 *            the observable
-	 * @param object
-	 *            the object
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	@Override
-	public void update(final Observable observable, final Object object)
-	{
-		if (observable instanceof ClientInfo)
-		{
-			final ClientInfo clientInfo = (ClientInfo) observable;
-			if (object instanceof String)
-			{
-				final String string = (String) object;
-				final String answer = parserIn(string, clientInfo);
-				clientInfo.getClientSender().sendMessage(answer);
-			}
-		}
-	}
-
-	/* _________________________________________________________ */
-	/**
 	 * Parser.
 	 * Le message respecte ce méta-langage :
 	 * OPERANDE OP1 <op1> OP2 <op2>.
 	 * 
 	 * @param message
 	 *            the string
-	 * @param clientInfo
-	 *            the client info
 	 * @return the string
 	 */
-	private String parserIn(final String message, final ClientInfo clientInfo)
+	private String parserIn(final String message)
 	{
 		float resultat = 0;
 		String id = null;
@@ -100,9 +73,11 @@ public class AnalyzerCalcul implements Observer, Analyzer
 				int i = 0;
 				id = split[i];
 				final String operande = split[++i];
-				final String op1 = split[++i];
+				// final String op1 = split[++i];
+				++i;
 				final String op1Nombre = split[++i];
-				final String op2 = split[++i];
+				// final String op2 = split[++i];
+				++i;
 				final String op2Nombre = split[++i];
 				if (operande.contains(ProtocolCommandes.ADD.toString()))
 				{
@@ -120,8 +95,11 @@ public class AnalyzerCalcul implements Observer, Analyzer
 				{
 					operation = new Division();
 				}
-				resultat = operation.operation(Float.parseFloat(op1Nombre),
-						Float.parseFloat(op2Nombre));
+				if (operation != null)
+				{
+					resultat = operation.operation(Float.parseFloat(op1Nombre),
+							Float.parseFloat(op2Nombre));
+				}
 			}
 		}
 		return parserOut(id, resultat);
@@ -139,7 +117,37 @@ public class AnalyzerCalcul implements Observer, Analyzer
 	 */
 	private String parserOut(final String id, final float resultat)
 	{
-		return id + ProtocolCommandes.SEP + Float.toString(resultat);
+		return id + ProtocolCommandes.SEP + ProtocolCommandes.RES.toString()
+				+ ProtocolCommandes.SEP + Float.toString(resultat);
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Update.
+	 * 
+	 * @param observable
+	 *            the observable
+	 * @param object
+	 *            the object
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
+	public void update(final Observable observable, final Object object)
+	{
+		if (observable instanceof ClientInfo)
+		{
+			final ClientInfo clientInfo = (ClientInfo) observable;
+			if (object instanceof String)
+			{
+				final String string = (String) object;
+				final String answer = parserIn(string);
+				Log.d("AnalyzerCalcul", "update() answer " + answer);
+				if (!answer.contains("null"))
+				{
+					clientInfo.getClientSender().sendMessage(answer);
+				}
+			}
+		}
 	}
 }
 /* _________________________________________________________ */
