@@ -38,7 +38,9 @@ public enum ProtocolCommandes
 	/** The req. */
 	REQ("REQ"),
 	/** The stat. */
-	STAT("STAT"), ;
+	STAT("STAT"),
+	/** The sep. */
+	SEP(" ");
 	/** The value. */
 	private final String	value;
 

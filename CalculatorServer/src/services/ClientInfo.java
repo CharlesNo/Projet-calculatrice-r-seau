@@ -164,4 +164,18 @@ public class ClientInfo extends Observable implements Observer
 	{
 		notifyObservers(object);
 	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Adds the observer.
+	 * 
+	 * @param observer
+	 *            the observer
+	 * @see java.util.Observable#addObserver(java.util.Observer)
+	 */
+	@Override
+	public synchronized void addObserver(final Observer observer)
+	{
+		super.addObserver(observer);
+	}
 }

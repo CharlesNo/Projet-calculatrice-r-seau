@@ -26,7 +26,16 @@ public class Launch
 	 */
 	public static void main(final String[] args)
 	{
-		final Server server = new Server();
+		final Server server = new Server(5042);
+		server.start();
+		try
+		{
+			server.join();
+		}
+		catch (final InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
 /*---------------------------------------------------------------*/

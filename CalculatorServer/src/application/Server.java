@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
+import services.AnalyzerCalcul;
 import services.ClientInfo;
 
 /*---------------------------------------------------------------*/
@@ -25,40 +26,56 @@ import services.ClientInfo;
  */
 public class Server implements Runnable
 {
-	/** The Constant LISTENING_PORT. */
-	private static final int		LISTENING_PORT	= 5042;
 	/** The clients. */
 	private List<ClientInfo>		clients;
+	/** The port. */
+	private final int				port;
 	/** The server socket. */
 	private ServerSocket			serverSocket;
 	/** The start. */
 	private final GregorianCalendar	start;
 	/** The thread. */
-	private final Thread			thread;
+	private Thread					thread;
+	/** The run. */
+	private boolean					run;
 
 	/**
 	 * Instantiates a new server.
+	 * 
+	 * @param port
+	 *            the port
 	 */
-	public Server()
+	public Server(final int port)
 	{
 		super();
+		this.port = port;
+		run = false;
 		start = new GregorianCalendar();
 		clients = new ArrayList<>();
-		thread = new Thread(this);
 		clients = new Vector<>();
 		serverSocket = null;
 		try
 		{
-			serverSocket = new ServerSocket(LISTENING_PORT);
-			System.out.println("Server started on port " + LISTENING_PORT);
+			serverSocket = new ServerSocket(port);
+			System.out.println("Server started on port " + port);
 		}
 		catch (final IOException se)
 		{
-			System.err.println("Can not start listening on port "
-					+ LISTENING_PORT);
+			System.err.println("Can not start listening on port " + port);
 			se.printStackTrace();
 			System.exit(-1);
 		}
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ port.
+	 * 
+	 * @return la valeur du champ port.
+	 */
+	public int getPort()
+	{
+		return port;
 	}
 
 	/* _________________________________________________________ */
@@ -97,6 +114,19 @@ public class Server implements Runnable
 
 	/* _________________________________________________________ */
 	/**
+	 * Join.
+	 * 
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 * @see java.lang.Thread#join()
+	 */
+	public final void join() throws InterruptedException
+	{
+		thread.join();
+	}
+
+	/* _________________________________________________________ */
+	/**
 	 * Run.
 	 * 
 	 * @see java.lang.Runnable#run()
@@ -104,11 +134,12 @@ public class Server implements Runnable
 	@Override
 	public void run()
 	{
-		while (!isInterrupted())
+		while (run)
 		{
 			try
 			{
 				final ClientInfo client = new ClientInfo(serverSocket.accept());
+				client.addObserver(AnalyzerCalcul.getInstance());
 				clients.add(client);
 			}
 			catch (final IOException ioe)
@@ -130,7 +161,31 @@ public class Server implements Runnable
 	 */
 	public void start()
 	{
-		thread.start();
+		if (thread == null)
+		{
+			run = true;
+			thread = new Thread(this);
+			thread.setDaemon(true);
+			thread.setName("Server");
+			thread.start();
+		}
+	}
+
+	/**
+	 * Stop.
+	 * 
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
+	public void stop() throws InterruptedException
+	{
+		if (thread != null)
+		{
+			run = false;
+			thread.interrupt();
+			join();
+			thread = null;
+		}
 	}
 }
 /*---------------------------------------------------------------*/
