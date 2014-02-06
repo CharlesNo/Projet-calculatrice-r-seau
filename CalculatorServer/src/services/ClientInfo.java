@@ -196,4 +196,17 @@ public class ClientInfo extends Observable implements Observer
 			notifyObservers(object);
 		}
 	}
+
+	/* _________________________________________________________ */
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "ClientInfo [socket=" + socket + "]";
+	}
 }

@@ -112,7 +112,6 @@ public class ClientReceiver extends Observable implements Runnable
 		{
 			while (!isInterrupted() && run)
 			{
-				Log.d("ClientReceiver", "run()");
 				final String message = reader.readLine();
 				Log.d("ClientReceiver", "run() + message = " + message);
 				if (message == null)
@@ -124,7 +123,7 @@ public class ClientReceiver extends Observable implements Runnable
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			System.out.println("Un client s'est déconnecté." + clientInfo);
 		}
 		clientInfo.interrupt();
 	}

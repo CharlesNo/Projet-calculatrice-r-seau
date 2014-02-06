@@ -18,8 +18,13 @@ package application;
 public class Launch
 {
 	/*---------------------------------------------------------------*/
+	// TODO LAURENCO
 	/**
 	 * The main method.
+	 * Envoyer à : laurenco@isima.fr
+	 * pour mardi à midi.
+	 * Avec un mode d'emploi et le projet entier.
+	 * Mode d'emploi = quoi tapper / comment l'utiliser.
 	 * 
 	 * @param args
 	 *            the arguments

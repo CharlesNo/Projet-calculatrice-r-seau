@@ -106,13 +106,13 @@ public class ClientSender implements Runnable
 			while (!isInterrupted() && run)
 			{
 				final String message = getNextMessageFromQueue();
-				sendMessageToClient(message);
+				sendMessageToClient(message + "\n");
 				Log.d("ClientSender", "run()" + message);
 			}
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			// erreur silencieuse...
 		}
 		clientInfo.getClientReciever().interrupt();
 	}
