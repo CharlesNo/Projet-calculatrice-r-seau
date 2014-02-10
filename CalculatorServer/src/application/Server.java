@@ -18,6 +18,7 @@ import services.AnalyzerCalcul;
 import services.ClientInfo;
 import services.Log;
 
+// TODO: Auto-generated Javadoc
 /*---------------------------------------------------------------*/
 /**
  * The Class Server.
@@ -39,6 +40,10 @@ public class Server implements Runnable
 	private final GregorianCalendar	start;
 	/** The thread. */
 	private Thread					thread;
+	/** The time start. */
+	private long					timeStart;
+	/** The instance. */
+	private static Server			instance;
 
 	/**
 	 * Instantiates a new server.
@@ -46,7 +51,7 @@ public class Server implements Runnable
 	 * @param port
 	 *            the port
 	 */
-	public Server(final int port)
+	private Server(final int port)
 	{
 		super();
 		this.port = port;
@@ -63,9 +68,34 @@ public class Server implements Runnable
 		catch (final IOException se)
 		{
 			System.err.println("Can not start listening on port " + port);
-			se.printStackTrace();
 			System.exit(-1);
 		}
+	}
+
+	/**
+	 * Gets the single instance of Server.
+	 * 
+	 * @param port
+	 *            the port
+	 * @return single instance of Server
+	 */
+	public static Server getInstance(final int port)
+	{
+		if (instance == null)
+		{
+			instance = new Server(port);
+		}
+		return instance;
+	}
+
+	/**
+	 * Gets the instance.
+	 * 
+	 * @return the instance
+	 */
+	public static Server getInstance()
+	{
+		return instance;
 	}
 
 	/* _________________________________________________________ */
@@ -165,6 +195,7 @@ public class Server implements Runnable
 	{
 		if (thread == null)
 		{
+			timeStart = System.currentTimeMillis();
 			run = true;
 			thread = new Thread(this);
 			thread.setDaemon(true);
@@ -188,6 +219,32 @@ public class Server implements Runnable
 			join();
 			thread = null;
 		}
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ nbRequest.
+	 * 
+	 * @return la valeur du champ nbRequest.
+	 */
+	public int getNbRequest()
+	{
+		int nbRequest = 0;
+		for (final ClientInfo clientInfo : clients)
+		{
+			nbRequest += clientInfo.getNbRequest();
+		}
+		return nbRequest;
+	}
+
+	/**
+	 * Gets the time.
+	 * 
+	 * @return the time
+	 */
+	public long getTime()
+	{
+		return System.currentTimeMillis() - timeStart;
 	}
 }
 /*---------------------------------------------------------------*/

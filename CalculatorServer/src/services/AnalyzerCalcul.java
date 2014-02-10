@@ -16,6 +16,7 @@ import metier.Division;
 import metier.Multiplication;
 import metier.Operation;
 import metier.Soustraction;
+import application.Server;
 
 /* _________________________________________________________ */
 /**
@@ -102,8 +103,35 @@ public class AnalyzerCalcul implements Observer, Analyzer
 							Float.parseFloat(op2Nombre));
 				}
 			}
+			else
+			{
+				if (message.contains(ProtocolCommandes.STAT.toString()))
+				{
+					Log.d("AnalyzerCalcul", "parserIn()");
+					return formatStat();
+				}
+			}
 		}
-		return parserOut(id, resultat);
+		return formatOut(id, resultat);
+	}
+
+	/**
+	 * Format stat.
+	 * 
+	 * @return the string
+	 */
+	private String formatStat()
+	{
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(ProtocolCommandes.STAT.toString());
+		stringBuilder.append(ProtocolCommandes.SEP.toString());
+		stringBuilder.append("Temps d'execution : ");
+		stringBuilder.append(Server.getInstance().getTime());
+		stringBuilder.append(ProtocolCommandes.SEP.toString());
+		stringBuilder.append("Nombre de requetes : ");
+		stringBuilder.append(Server.getInstance().getNbRequest());
+		final String string = stringBuilder.toString();
+		return string;
 	}
 
 	/* _________________________________________________________ */
@@ -116,7 +144,7 @@ public class AnalyzerCalcul implements Observer, Analyzer
 	 *            the resultat
 	 * @return the string
 	 */
-	private String parserOut(final String id, final float resultat)
+	private String formatOut(final String id, final float resultat)
 	{
 		return id + ProtocolCommandes.SEP + ProtocolCommandes.RES.toString()
 				+ ProtocolCommandes.SEP + Float.toString(resultat);

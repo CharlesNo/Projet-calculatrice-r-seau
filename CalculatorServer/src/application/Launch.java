@@ -31,7 +31,15 @@ public class Launch
 	 */
 	public static void main(final String[] args)
 	{
-		final Server server = new Server(5042);
+		Server server = null;
+		if (args.length > 0)
+		{
+			server = Server.getInstance(Integer.parseInt(args[0]));
+		}
+		else
+		{
+			server = Server.getInstance(5042);
+		}
 		server.start();
 		try
 		{

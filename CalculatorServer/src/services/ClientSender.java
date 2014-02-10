@@ -46,7 +46,7 @@ public class ClientSender implements Runnable
 		run = false;
 		clientInfo = aClientInfo;
 		out = new PrintWriter(new OutputStreamWriter(aClientInfo.getSocket()
-				.getOutputStream()));
+				.getOutputStream()), true);
 	}
 
 	/**

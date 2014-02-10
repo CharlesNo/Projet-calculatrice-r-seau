@@ -28,6 +28,8 @@ public class ClientInfo extends Observable implements Observer
 	private ClientSender	clientSender	= null;
 	/** The socket. */
 	private final Socket	socket;
+	/** The nb request. */
+	private int				nbRequest;
 
 	/* _________________________________________________________ */
 	/**
@@ -192,6 +194,7 @@ public class ClientInfo extends Observable implements Observer
 	{
 		if (observable instanceof ClientReceiver)
 		{
+			++nbRequest;
 			Log.d("ClientInfo", "update() " + object);
 			notifyObservers(object);
 		}
@@ -208,5 +211,16 @@ public class ClientInfo extends Observable implements Observer
 	public String toString()
 	{
 		return "ClientInfo [socket=" + socket + "]";
+	}
+
+	/* _________________________________________________________ */
+	/**
+	 * Retourne la valeur du champ nbRequest.
+	 * 
+	 * @return la valeur du champ nbRequest.
+	 */
+	public int getNbRequest()
+	{
+		return nbRequest;
 	}
 }
